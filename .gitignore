@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
+!.env.local.example
+
+# Build output
+dist/
+build/
+.next/
+out/
+
+# Prisma
+backend/prisma/migrations/dev.db*
+
+# Testing / coverage
+coverage/
+.nyc_output/
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# PWA generated
+frontend/public/sw.js
+frontend/public/workbox-*.js
+frontend/public/sw.js.map
+
+# Keys
+*.pem

@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+  background-color: #000;
+  color: #fff;
+  overscroll-behavior-y: none;
+}
+
+body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Inputs must be >=16px to prevent iOS zoom on focus. */
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
+/* Hide Mux Player's default controls — the feed uses a custom overlay. */
+mux-player {
+  --controls: none;
+  --media-object-fit: cover;
+}
+
+@layer components {
+  .auth-input {
+    @apply h-12 w-full rounded-xl border border-white/10 bg-surface px-4 text-white outline-none transition-colors focus:border-brand-cyan;
+  }
+}
+
+@layer utilities {
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .h-dvh {
+    height: 100dvh;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .snap-y-mandatory {
+    scroll-snap-type: y mandatory;
+  }
+  .snap-start {
+    scroll-snap-align: start;
+  }
+}

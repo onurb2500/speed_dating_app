@@ -1,0 +1,7 @@
+export default function RecordLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <div className="h-dvh w-full overflow-hidden bg-black">{children}</div>;
+}

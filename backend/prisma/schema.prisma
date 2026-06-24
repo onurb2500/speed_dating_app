@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  passwordHash  String
+  displayName   String
+  avatarUrl     String?
+  savedPrompts  Json?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  videos        Video[]
+  refreshTokens RefreshToken[]
+  likes         Like[]
+  comments      Comment[]
+}
+
+model Video {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  muxAssetId    String?     @unique
+  muxUploadId   String?     @unique
+  muxPlaybackId String?     @unique
+  duration      Float
+  status        VideoStatus @default(PROCESSING)
+  confirmedAt   DateTime?
+  createdAt     DateTime    @default(now())
+  likes         Like[]
+  comments      Comment[]
+
+  @@index([status, createdAt])
+  @@index([userId])
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  videoId   String
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, videoId])
+  @@index([videoId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  videoId   String
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  text      String   @db.VarChar(280)
+  createdAt DateTime @default(now())
+
+  @@index([videoId, createdAt])
+}
+
+enum VideoStatus {
+  PROCESSING
+  READY
+  FAILED
+}

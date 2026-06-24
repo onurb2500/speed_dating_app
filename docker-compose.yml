@@ -1,0 +1,40 @@
+version: "3.9"
+
+# Optional local infrastructure for development.
+# Postgres + Redis only — Mux requires a real account (see backend/.env.example).
+#
+#   docker compose up -d
+#
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: speed_dating_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: speed
+      POSTGRES_PASSWORD: speed
+      POSTGRES_DB: speed_dating
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U speed -d speed_dating"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: speed_dating_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
