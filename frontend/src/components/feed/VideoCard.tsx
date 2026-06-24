@@ -7,6 +7,7 @@ import { MessageCircle, Volume2, VolumeX } from "lucide-react";
 import { FeedItem } from "@/types";
 import { LikeButton } from "@/components/feed/LikeButton";
 import { ProgressBar } from "@/components/feed/ProgressBar";
+import { ClientOnly } from "@/components/ui/ClientOnly";
 import { formatCount } from "@/lib/utils";
 
 interface VideoCardProps {
@@ -44,34 +45,42 @@ export function VideoCard({
     }
   }, [isActive, isNear, video.videoId, onWatched]);
 
+  // Poster shown for off-screen cards and while the client-only player mounts.
+  const poster = (
+    <div
+      className="h-full w-full bg-cover bg-center"
+      style={{
+        backgroundImage: `url(https://image.mux.com/${video.playbackId}/thumbnail.webp?width=720)`,
+      }}
+    />
+  );
+
   return (
     <section className="relative h-dvh w-full snap-start bg-black">
       <ProgressBar progress={progress} />
 
       {isNear ? (
-        <MuxPlayer
-          ref={playerRef}
-          playbackId={video.playbackId}
-          streamType="on-demand"
-          loop
-          muted={muted}
-          autoPlay={isActive ? "muted" : false}
-          playsInline
-          nohotkeys
-          style={{ height: "100%", width: "100%" }}
-          onTimeUpdate={(e) => {
-            const el = e.currentTarget as unknown as MuxPlayerElement;
-            if (el.duration) setProgress((el.currentTime ?? 0) / el.duration);
-          }}
-        />
+        // Client-only: keep the <mux-player> web component (hls.js + MediaSource)
+        // out of the SSR/first-paint render path so it mounts once, cleanly.
+        <ClientOnly fallback={poster}>
+          <MuxPlayer
+            ref={playerRef}
+            playbackId={video.playbackId}
+            streamType="on-demand"
+            loop
+            muted={muted}
+            autoPlay={isActive ? "muted" : false}
+            playsInline
+            nohotkeys
+            style={{ height: "100%", width: "100%" }}
+            onTimeUpdate={(e) => {
+              const el = e.currentTarget as unknown as MuxPlayerElement;
+              if (el.duration) setProgress((el.currentTime ?? 0) / el.duration);
+            }}
+          />
+        </ClientOnly>
       ) : (
-        // Off-screen: poster only, no hls.js/MediaSource instance.
-        <div
-          className="h-full w-full bg-cover bg-center"
-          style={{
-            backgroundImage: `url(https://image.mux.com/${video.playbackId}/thumbnail.webp?width=720)`,
-          }}
-        />
+        poster
       )}
 
       {/* Tap to toggle sound. */}

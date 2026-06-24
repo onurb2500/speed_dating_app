@@ -36,7 +36,11 @@ const withPWA = withPWAInit({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  // Disabled: the mux-player web component + hls.js MediaSource lifecycle does
+  // not tolerate StrictMode's dev double-mount — the unmount tears down the
+  // MediaSource while an in-flight appendBuffer is still pending, throwing a
+  // fatal InvalidStateError/bufferAppendError. Production never double-mounts.
+  reactStrictMode: false,
 };
 
 export default withPWA(nextConfig);
