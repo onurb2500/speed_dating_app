@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 
 interface PreviewScreenProps {
@@ -17,16 +17,24 @@ export function PreviewScreen({
   onSubmit,
   submitting,
 }: PreviewScreenProps) {
-  const url = useMemo(() => URL.createObjectURL(blob), [blob]);
+  const [url, setUrl] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => () => URL.revokeObjectURL(url), [url]);
+  // Create the object URL inside the effect so each mount cycle gets its own
+  // instance. Under React StrictMode the mount→unmount→remount sequence would
+  // otherwise revoke a memoized URL and leave the remounted <video> pointing at
+  // a dead blob: URL ("may not load data from blob:").
+  useEffect(() => {
+    const objectUrl = URL.createObjectURL(blob);
+    setUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [blob]);
 
   return (
     <div className="relative flex h-dvh flex-col bg-black">
       <video
         ref={videoRef}
-        src={url}
+        src={url ?? undefined}
         className="h-full w-full object-cover"
         autoPlay
         loop

@@ -26,16 +26,14 @@ export function useUpload() {
       cancelled.current = false;
       setError(null);
       try {
-        const videoId = await uploadVideo(blob, durationSeconds, {
+        const { videoId, ready } = await uploadVideo(blob, durationSeconds, {
           onPhase: setPhase,
           isCancelled: () => cancelled.current,
         });
-        if (!videoId) {
-          setPhase("error");
-          setError("O vídeo demorou demais para processar");
-          return null;
-        }
-        setPhase("ready");
+        // Confirm succeeded → the upload is done. If it's still processing the
+        // asset already exists and will appear once Mux finishes; this is not
+        // an error and must not trigger a re-upload.
+        setPhase(ready ? "ready" : "processing");
         return videoId;
       } catch (err) {
         setPhase("error");

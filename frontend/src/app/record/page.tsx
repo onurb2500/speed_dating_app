@@ -49,10 +49,12 @@ export default function RecordPage() {
     setPhase("uploading");
     const videoId = await upload(videoBlob, durationSeconds);
     if (videoId) {
+      // Upload + confirm succeeded. Even if still processing, the asset exists
+      // and will surface in the feed once Mux finishes — do NOT queue a retry.
       reset();
       router.push("/feed");
     } else {
-      // Persist for later retry and let the user move on.
+      // Genuine failure before the asset was created → safe to retry later.
       await savePendingUpload(videoBlob, durationSeconds);
       setPhase("preview");
     }

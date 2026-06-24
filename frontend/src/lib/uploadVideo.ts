@@ -19,16 +19,28 @@ interface UploadCallbacks {
   isCancelled?: () => boolean;
 }
 
+export interface UploadResult {
+  /** Backend video id — present once the Mux asset is created + confirmed. */
+  videoId: string;
+  /** Whether the asset finished processing (READY) within the poll window. */
+  ready: boolean;
+}
+
 /**
  * Core upload flow shared by the interactive hook and the offline sync:
  * request a Mux upload URL → PUT the blob (retry w/ backoff) → confirm →
- * poll until READY. Returns the videoId, or null if it never became ready.
+ * poll until READY.
+ *
+ * Resolves once the asset has been created + confirmed (the exactly-once
+ * boundary). It throws ONLY if the upload genuinely fails before that point.
+ * A processing timeout is NOT a failure — the asset already exists, so callers
+ * must not retry/re-upload (doing so creates duplicate Mux assets).
  */
 export async function uploadVideo(
   blob: Blob,
   durationSeconds: number,
   cb: UploadCallbacks = {},
-): Promise<string | null> {
+): Promise<UploadResult> {
   cb.onPhase?.("requesting");
   const { data } = await api.post<UploadUrlResponse>("/videos/upload-url", {
     durationSeconds,
@@ -37,11 +49,15 @@ export async function uploadVideo(
   cb.onPhase?.("uploading");
   await putWithRetry(data.uploadUrl, blob);
 
+  // Confirm = the Mux asset now exists on our side. Past this point the upload
+  // must never be retried, or Mux accumulates duplicates of the same recording.
   await api.post("/videos/confirm", { videoId: data.videoId });
 
   cb.onPhase?.("processing");
+  // Readiness is async (driven by the Mux webhook). Polling is purely for UX;
+  // a timeout does not mean failure.
   const ready = await pollUntilReady(data.videoId, cb.isCancelled);
-  return ready ? data.videoId : null;
+  return { videoId: data.videoId, ready };
 }
 
 async function putWithRetry(url: string, blob: Blob): Promise<void> {

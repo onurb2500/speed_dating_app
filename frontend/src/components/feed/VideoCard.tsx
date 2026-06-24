@@ -12,6 +12,8 @@ import { formatCount } from "@/lib/utils";
 interface VideoCardProps {
   video: FeedItem;
   isActive: boolean;
+  /** Whether to mount a real player (active ± 1) vs. just a poster image. */
+  isNear: boolean;
   onOpenComments: (videoId: string) => void;
   onWatched: (videoId: string) => void;
 }
@@ -20,6 +22,7 @@ interface VideoCardProps {
 export function VideoCard({
   video,
   isActive,
+  isNear,
   onOpenComments,
   onWatched,
 }: VideoCardProps) {
@@ -27,7 +30,8 @@ export function VideoCard({
   const [muted, setMuted] = useState(true);
   const [progress, setProgress] = useState(0);
 
-  // Play only the active card; pause and reset others.
+  // Play only the active card; pause and reset others. Guarded on `isNear`
+  // because off-screen cards have no mounted player.
   useEffect(() => {
     const player = playerRef.current;
     if (!player) return;
@@ -38,28 +42,37 @@ export function VideoCard({
       player.pause?.();
       player.currentTime = 0;
     }
-  }, [isActive, video.videoId, onWatched]);
+  }, [isActive, isNear, video.videoId, onWatched]);
 
   return (
     <section className="relative h-dvh w-full snap-start bg-black">
       <ProgressBar progress={progress} />
 
-      <MuxPlayer
-        ref={playerRef}
-        playbackId={video.playbackId}
-        streamType="on-demand"
-        loop
-        muted={muted}
-        autoPlay={isActive ? "muted" : false}
-        playsInline
-        nohotkeys
-        style={{ height: "100%", width: "100%" }}
-        onTimeUpdate={(e) => {
-          const el = e.currentTarget as unknown as MuxPlayerElement;
-          if (el.duration)
-            setProgress((el.currentTime ?? 0) / el.duration);
-        }}
-      />
+      {isNear ? (
+        <MuxPlayer
+          ref={playerRef}
+          playbackId={video.playbackId}
+          streamType="on-demand"
+          loop
+          muted={muted}
+          autoPlay={isActive ? "muted" : false}
+          playsInline
+          nohotkeys
+          style={{ height: "100%", width: "100%" }}
+          onTimeUpdate={(e) => {
+            const el = e.currentTarget as unknown as MuxPlayerElement;
+            if (el.duration) setProgress((el.currentTime ?? 0) / el.duration);
+          }}
+        />
+      ) : (
+        // Off-screen: poster only, no hls.js/MediaSource instance.
+        <div
+          className="h-full w-full bg-cover bg-center"
+          style={{
+            backgroundImage: `url(https://image.mux.com/${video.playbackId}/thumbnail.webp?width=720)`,
+          }}
+        />
+      )}
 
       {/* Tap to toggle sound. */}
       <button

@@ -23,10 +23,15 @@ export function usePendingUploadSync(): void {
         const pending = await getPendingUploads();
         for (const item of pending) {
           try {
-            const videoId = await uploadVideo(item.blob, item.durationSeconds);
-            if (videoId) await removePendingUpload(item.id);
+            await uploadVideo(item.blob, item.durationSeconds);
+            // Confirm succeeded → the asset was created, so drop it from the
+            // queue regardless of processing state. Keeping it (e.g. because it
+            // wasn't READY yet) would re-PUT the same blob on every reconnect
+            // and pile up duplicate Mux assets.
+            await removePendingUpload(item.id);
           } catch {
-            // Leave it queued for the next reconnect.
+            // Upload genuinely failed before the asset was created — keep it
+            // queued for the next reconnect.
           }
         }
       } finally {

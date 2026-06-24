@@ -58,6 +58,10 @@ export function FeedScroller({
           <VideoCard
             video={video}
             isActive={index === activeIndex}
+            // Only the active card and its immediate neighbors mount a real
+            // player; the rest show a poster. This caps the number of live
+            // hls.js/MediaSource instances and avoids buffer-append races.
+            isNear={Math.abs(index - activeIndex) <= 1}
             onOpenComments={onOpenComments}
             onWatched={onWatched}
           />
