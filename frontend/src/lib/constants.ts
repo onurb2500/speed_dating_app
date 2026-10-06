@@ -17,61 +17,61 @@ export const FEED_PAGE_DEFAULT = 10;
 /** Comment length cap (mirrors the backend). */
 export const COMMENT_MAX_LENGTH = 280;
 
-/** Base prompts (PT) per FLOWS.md §2 — each becomes active at startTime. */
+/** Base prompts (EN) per SCREENS.md §2/§3 — each becomes active at startTime. */
 export const BASE_PROMPTS: Prompt[] = [
   {
     id: 1,
-    baseText: "Minha [personagem favorita] da Disney é a [Minie]",
+    baseText:
+      "My favorite Disney character is [Minnie] — but not the classic one. Mine's [in sneakers, ripped]",
     tokens: [
       {
-        placeholder: "personagem favorita",
-        value: "personagem favorita",
-        suggestions: ["vilã favorita", "princesa favorita", "dupla favorita"],
+        placeholder: "Minnie",
+        value: "Minnie",
+        suggestions: ["Ursula", "Mulan", "Stitch"],
       },
       {
-        placeholder: "Minie",
-        value: "Minie",
-        suggestions: ["Úrsula", "Mulan", "Stitch"],
+        placeholder: "in sneakers, ripped",
+        value: "in sneakers, ripped",
+        suggestions: ["in a leather jacket", "with a buzzcut", "off-duty"],
       },
     ],
     startTime: 0,
-    poseHint: "Incline levemente para frente e sorria naturalmente",
-    toneHint: "caloroso e divertido",
+    poseHint: "Lean in. Soften the smile.",
+    toneHint: "warm & playful",
     toneBadgeIcon: "✨",
   },
   {
     id: 2,
-    baseText:
-      "Se eu pudesse dominar uma habilidade instantaneamente seria [tocar piano]",
+    baseText: "If I could instantly master one skill, it'd be [play piano]",
     tokens: [
       {
-        placeholder: "tocar piano",
-        value: "tocar piano",
-        suggestions: ["falar 10 idiomas", "cozinhar como chef", "dançar salsa"],
+        placeholder: "play piano",
+        value: "play piano",
+        suggestions: ["speak 10 languages", "cook like a chef", "dance salsa"],
       },
     ],
     startTime: 15,
-    poseHint: "Use as mãos para gesticular e incline a cabeça",
-    toneHint: "curioso e expressivo",
+    poseHint: "Use your hands. Tilt your head a touch.",
+    toneHint: "curious & expressive",
     toneBadgeIcon: "🎭",
   },
   {
     id: 3,
-    baseText: "Minha tarde livre perfeita parece com [um café e um bom livro]",
+    baseText: "My perfect lazy afternoon looks like [slow coffee and zero plans]",
     tokens: [
       {
-        placeholder: "um café e um bom livro",
-        value: "um café e um bom livro",
+        placeholder: "slow coffee and zero plans",
+        value: "slow coffee and zero plans",
         suggestions: [
-          "uma trilha na natureza",
-          "maratona de filmes",
-          "praia ao pôr do sol",
+          "a trail in the woods",
+          "a movie marathon",
+          "the beach at sunset",
         ],
       },
     ],
     startTime: 30,
-    poseHint: "Sorriso aberto e postura relaxada",
-    toneHint: "leve e acolhedor",
+    poseHint: "Open smile, relaxed shoulders.",
+    toneHint: "easy & inviting",
     toneBadgeIcon: "☀️",
   },
 ];
@@ -86,13 +86,11 @@ export const FILTER_CSS: Record<CameraFilter, string> = {
 };
 
 export const FILTER_LABELS: Record<CameraFilter, string> = {
-  natural: "Natural",
-  vintage: "Vintage",
-  vivid: "Vivid",
-  bw: "P&B",
-  warm: "Warm",
+  natural: "natural",
+  vintage: "vintage",
+  vivid: "vivid",
+  bw: "b&w",
+  warm: "warm",
 };
 
-export const EMOJI_PALETTE = [
-  "❤️", "😍", "🔥", "✨", "😎", "🥰", "😂", "🌹", "💫", "👑", "🦋", "🍀",
-];
+export const EMOJI_PALETTE = ["❤️", "🔥", "✨", "😏", "🌙", "💋", "🍒"];

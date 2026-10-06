@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FeedItem } from "@/types";
 import { VideoCard } from "@/components/feed/VideoCard";
+import { ChevronUp } from "@/components/ui/icons";
 
 interface FeedScrollerProps {
   videos: FeedItem[];
@@ -23,6 +24,7 @@ export function FeedScroller({
 }: FeedScrollerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [advanced, setAdvanced] = useState(false);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -36,6 +38,7 @@ export function FeedScroller({
               (entry.target as HTMLElement).dataset.index ?? 0,
             );
             setActiveIndex(index);
+            if (index > 0) setAdvanced(true);
             if (index >= videos.length - 2) onNearEnd();
           }
         }
@@ -67,6 +70,16 @@ export function FeedScroller({
           />
         </div>
       ))}
+
+      {/* Swipe hint — hides after the first advance. */}
+      {!advanced && videos.length > 1 && (
+        <div className="pointer-events-none fixed inset-x-0 bottom-[58px] z-30 flex animate-bob-fast flex-col items-center gap-[3px]">
+          <ChevronUp className="h-[18px] w-[18px] text-white/70" />
+          <span className="text-[11px] uppercase tracking-[1px] text-white/65">
+            swipe for next
+          </span>
+        </div>
+      )}
     </div>
   );
 }

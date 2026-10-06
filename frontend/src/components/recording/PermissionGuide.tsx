@@ -12,14 +12,14 @@ export function PermissionGuide({
   onRetry: () => void;
 }) {
   return (
-    <Modal open={open} onClose={onRetry} title="Precisamos da câmera 🎥">
-      <ol className="mb-4 list-decimal space-y-1 pl-5 text-sm text-muted">
-        <li>Toque no ícone de cadeado na barra do navegador.</li>
-        <li>Ative as permissões de Câmera e Microfone.</li>
-        <li>Recarregue e tente novamente.</li>
+    <Modal open={open} onClose={onRetry} title="We need your camera">
+      <ol className="mb-4 list-decimal space-y-1 pl-5 text-sm text-onDarkSoft/70">
+        <li>Tap the lock icon in the browser bar.</li>
+        <li>Enable Camera and Microphone permissions.</li>
+        <li>Reload and try again.</li>
       </ol>
       <Button className="w-full" onClick={onRetry}>
-        Tentar de novo
+        Try again
       </Button>
     </Modal>
   );

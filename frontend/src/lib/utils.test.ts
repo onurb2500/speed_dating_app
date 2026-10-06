@@ -41,11 +41,11 @@ describe("utils", () => {
     expect(renderPromptText(prompt)).toBe("Minha vilã da Disney é a Úrsula");
   });
 
-  it("formats relative time in PT", () => {
+  it("formats relative time in English", () => {
     const now = Date.now();
-    expect(timeAgo(new Date(now).toISOString())).toBe("agora");
-    expect(timeAgo(new Date(now - 5 * 60_000).toISOString())).toBe("há 5min");
-    expect(timeAgo(new Date(now - 3 * 3_600_000).toISOString())).toBe("há 3h");
-    expect(timeAgo(new Date(now - 2 * 86_400_000).toISOString())).toBe("há 2d");
+    expect(timeAgo(new Date(now).toISOString())).toBe("just now");
+    expect(timeAgo(new Date(now - 5 * 60_000).toISOString())).toBe("5m ago");
+    expect(timeAgo(new Date(now - 3 * 3_600_000).toISOString())).toBe("3h ago");
+    expect(timeAgo(new Date(now - 2 * 86_400_000).toISOString())).toBe("2d ago");
   });
 });

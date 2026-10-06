@@ -9,9 +9,9 @@ export function OfflineBanner() {
   return (
     <div
       role="status"
-      className="fixed inset-x-0 top-0 z-[60] bg-brand-pink/90 py-1.5 text-center text-xs font-medium text-white pt-safe"
+      className="fixed inset-x-0 top-0 z-[60] bg-accent-rose/90 py-1.5 text-center text-xs font-medium text-white pt-safe"
     >
-      Modo offline — mostrando vídeos salvos
+      Offline mode — showing saved videos
     </div>
   );
 }

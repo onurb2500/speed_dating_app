@@ -18,16 +18,16 @@ export function CountdownOverlay({ onComplete }: { onComplete: () => void }) {
   }, [count, onComplete]);
 
   return (
-    <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/40">
+    <div className="absolute inset-0 z-30 flex items-center justify-center bg-[rgba(10,4,6,0.45)] backdrop-blur-[2px]">
       <AnimatePresence mode="popLayout">
         <motion.span
           key={count}
           initial={{ scale: 0.4, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 1.6, opacity: 0 }}
-          className="text-8xl font-extrabold text-white drop-shadow-lg"
+          className="font-display text-[150px] font-medium italic leading-none text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.5)]"
         >
-          {count > 0 ? count : "🎬"}
+          {count > 0 ? count : "✨"}
         </motion.span>
       </AnimatePresence>
     </div>

@@ -3,12 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import MuxPlayer from "@mux/mux-player-react";
 import type MuxPlayerElement from "@mux/mux-player";
-import { MessageCircle, Volume2, VolumeX } from "lucide-react";
+import { Volume2, VolumeX } from "lucide-react";
 import { FeedItem } from "@/types";
 import { LikeButton } from "@/components/feed/LikeButton";
 import { ProgressBar } from "@/components/feed/ProgressBar";
 import { ClientOnly } from "@/components/ui/ClientOnly";
 import { formatCount } from "@/lib/utils";
+import { CommentBubble, Plus } from "@/components/ui/icons";
 
 interface VideoCardProps {
   video: FeedItem;
@@ -31,8 +32,7 @@ export function VideoCard({
   const [muted, setMuted] = useState(true);
   const [progress, setProgress] = useState(0);
 
-  // Play only the active card; pause and reset others. Guarded on `isNear`
-  // because off-screen cards have no mounted player.
+  // Play only the active card; pause and reset others.
   useEffect(() => {
     const player = playerRef.current;
     if (!player) return;
@@ -45,7 +45,6 @@ export function VideoCard({
     }
   }, [isActive, isNear, video.videoId, onWatched]);
 
-  // Poster shown for off-screen cards and while the client-only player mounts.
   const poster = (
     <div
       className="h-full w-full bg-cover bg-center"
@@ -56,12 +55,8 @@ export function VideoCard({
   );
 
   return (
-    <section className="relative h-dvh w-full snap-start bg-black">
-      <ProgressBar progress={progress} />
-
+    <section className="relative h-dvh w-full snap-start overflow-hidden bg-videoInk-b">
       {isNear ? (
-        // Client-only: keep the <mux-player> web component (hls.js + MediaSource)
-        // out of the SSR/first-paint render path so it mounts once, cleanly.
         <ClientOnly fallback={poster}>
           <MuxPlayer
             ref={playerRef}
@@ -83,42 +78,73 @@ export function VideoCard({
         poster
       )}
 
+      {/* Readability scrim over the video. */}
+      <div className="scrim pointer-events-none absolute inset-0 z-10" aria-hidden />
+
+      <ProgressBar progress={progress} />
+
+      {/* Brand. */}
+      <p className="absolute inset-x-0 top-[80px] z-20 text-center font-display text-[19px] font-semibold italic text-white/90 [text-shadow:0_1px_8px_rgba(0,0,0,0.4)]">
+        Sway
+      </p>
+
       {/* Tap to toggle sound. */}
       <button
         type="button"
-        aria-label={muted ? "Ativar som" : "Silenciar"}
+        aria-label={muted ? "Unmute" : "Mute"}
         onClick={() => setMuted((m) => !m)}
         className="absolute inset-0 z-10"
       >
-        <span className="absolute right-4 top-20 rounded-full bg-black/40 p-2 pt-safe">
+        <span className="glass absolute right-[18px] top-[110px] grid h-9 w-9 place-items-center rounded-full">
           {muted ? (
-            <VolumeX className="h-5 w-5 text-white" />
+            <VolumeX className="h-[18px] w-[18px] text-onDarkSoft" />
           ) : (
-            <Volume2 className="h-5 w-5 text-white" />
+            <Volume2 className="h-[18px] w-[18px] text-onDarkSoft" />
           )}
         </span>
       </button>
 
       {/* Right action rail. */}
-      <div className="absolute bottom-28 right-3 z-20 flex flex-col items-center gap-5">
+      <div className="absolute bottom-[118px] right-[14px] z-20 flex flex-col items-center gap-[22px]">
+        {/* Avatar + follow. */}
+        <div className="relative [filter:drop-shadow(0_2px_6px_rgba(0,0,0,0.4))]">
+          <div className="h-12 w-12 overflow-hidden rounded-full border-2 border-white bg-grad-avatar">
+            {video.user.avatarUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={video.user.avatarUrl}
+                alt=""
+                className="h-full w-full object-cover"
+              />
+            )}
+          </div>
+          <span
+            aria-hidden
+            className="absolute -bottom-[7px] left-1/2 grid h-5 w-5 -translate-x-1/2 place-items-center rounded-full border-2 border-videoInk-b bg-accent-rose"
+          >
+            <Plus className="h-3 w-3 text-white" />
+          </span>
+        </div>
+
         <LikeButton video={video} />
+
         <button
           type="button"
-          aria-label="Abrir comentários"
+          aria-label="Open comments"
           onClick={() => onOpenComments(video.videoId)}
-          className="flex flex-col items-center gap-1"
+          className="flex flex-col items-center gap-[5px] [filter:drop-shadow(0_2px_6px_rgba(0,0,0,0.4))]"
         >
-          <MessageCircle className="h-9 w-9 text-white" />
-          <span className="text-xs font-medium text-white">
+          <CommentBubble className="h-[31px] w-[31px] text-white" />
+          <span className="text-[12.5px] font-semibold text-white">
             {formatCount(video.commentCount)}
           </span>
         </button>
       </div>
 
-      {/* User info. */}
-      <div className="absolute bottom-24 left-4 z-20 max-w-[70%]">
-        <p className="text-base font-semibold text-white">
-          @{video.user.displayName}
+      {/* Caption. */}
+      <div className="absolute bottom-[120px] left-5 right-[84px] z-20">
+        <p className="font-display text-[25px] font-semibold italic text-white [text-shadow:0_1px_8px_rgba(0,0,0,0.5)]">
+          {video.user.displayName}
         </p>
       </div>
     </section>

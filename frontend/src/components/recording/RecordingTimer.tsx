@@ -1,7 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { formatTime } from "@/lib/utils";
+import { cn, formatTime } from "@/lib/utils";
 import { MAX_VIDEO_DURATION } from "@/lib/constants";
 
 interface RecordingTimerProps {
@@ -11,7 +10,7 @@ interface RecordingTimerProps {
   promptCount: number;
 }
 
-/** Top bar: question progress, live timer, red REC dot. */
+/** Glass top bar: question progress, live timer, pulsing REC capsule. */
 export function RecordingTimer({
   elapsed,
   isWarning,
@@ -19,16 +18,27 @@ export function RecordingTimer({
   promptCount,
 }: RecordingTimerProps) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-full bg-black/40 px-4 py-2 text-sm text-white backdrop-blur">
-      <span className="font-medium">
-        Q{promptIndex + 1} de {promptCount}
+    <div className="glass flex h-[38px] items-center justify-between rounded-full pl-4 pr-2 text-onDarkSoft">
+      <span className="text-[13px]">
+        <span className="font-semibold">Q{promptIndex + 1} </span>
+        <span className="text-onDarkSoft/50">of {promptCount}</span>
       </span>
-      <span className={cn(isWarning && "font-bold text-brand-pink")}>
-        {formatTime(elapsed)} / {formatTime(MAX_VIDEO_DURATION)}
+
+      <span
+        className={cn(
+          "text-[14px] font-medium tabular-nums",
+          isWarning && "text-accent-hot",
+        )}
+      >
+        {formatTime(elapsed)}{" "}
+        <span className="text-onDarkSoft/45">/ {formatTime(MAX_VIDEO_DURATION)}</span>
       </span>
-      <span className="flex items-center gap-1.5">
-        <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-brand-pink" />
-        REC
+
+      <span className="flex items-center gap-1.5 rounded-full bg-[rgba(240,87,127,0.18)] py-[5px] pl-[9px] pr-[11px]">
+        <span className="h-2 w-2 animate-recPulse rounded-full bg-accent-hot shadow-[0_0_8px_#ff486f]" />
+        <span className="text-[11.5px] font-bold tracking-[1px] text-onDarkBlush">
+          REC
+        </span>
       </span>
     </div>
   );

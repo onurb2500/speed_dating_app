@@ -29,8 +29,8 @@ export default function RecordPage() {
 
   if (!ready) {
     return (
-      <div className="flex h-dvh items-center justify-center">
-        <Spinner className="h-8 w-8" />
+      <div className="flex h-dvh items-center justify-center bg-videoInk-a">
+        <Spinner className="h-8 w-8 text-accent-rose" />
       </div>
     );
   }
@@ -88,18 +88,18 @@ export default function RecordPage() {
           onSubmit={handleSubmit}
         />
         {phase === "uploading" && (
-          <div className="absolute inset-0 z-40 flex flex-col items-center justify-center gap-3 bg-black/70">
-            <Spinner className="h-8 w-8" />
-            <p className="text-sm text-white">
+          <div className="absolute inset-0 z-40 flex flex-col items-center justify-center gap-3 bg-[rgba(10,4,6,0.72)]">
+            <Spinner className="h-8 w-8 text-accent-rose" />
+            <p className="text-sm text-onDarkSoft">
               {uploadPhase === "processing"
-                ? "Processando seu vídeo…"
-                : "Enviando…"}
+                ? "Processing your video…"
+                : "Uploading…"}
             </p>
           </div>
         )}
         {error && phase === "preview" && (
-          <p className="absolute inset-x-0 bottom-28 text-center text-sm text-brand-pink">
-            {error} — salvamos seu vídeo para tentar mais tarde.
+          <p className="absolute inset-x-0 bottom-28 text-center text-sm text-accent-rose">
+            {error} — we saved your video to try again later.
           </p>
         )}
       </div>

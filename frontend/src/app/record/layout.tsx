@@ -3,5 +3,7 @@ export default function RecordLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="h-dvh w-full overflow-hidden bg-black">{children}</div>;
+  return (
+    <div className="h-dvh w-full overflow-hidden bg-videoInk-a">{children}</div>
+  );
 }

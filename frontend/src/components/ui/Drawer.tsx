@@ -31,7 +31,8 @@ export function Drawer({ open, onClose, children, title, className }: DrawerProp
             aria-modal="true"
             aria-label={title}
             className={cn(
-              "fixed inset-x-0 bottom-0 z-50 max-h-[75vh] rounded-t-2xl bg-surface",
+              "fixed inset-x-0 bottom-0 z-50 max-h-[75vh] rounded-t-[34px]",
+              "glass text-onDark",
               "flex flex-col pb-[env(safe-area-inset-bottom)]",
               className,
             )}
@@ -40,9 +41,9 @@ export function Drawer({ open, onClose, children, title, className }: DrawerProp
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
           >
-            <div className="mx-auto mt-3 h-1.5 w-10 rounded-full bg-white/20" />
+            <div className="mx-auto mt-3 h-1.5 w-10 rounded-full bg-white/25" />
             {title && (
-              <h2 className="px-4 py-3 text-center font-semibold text-white">
+              <h2 className="px-4 py-3 text-center font-display text-[22px] italic text-white">
                 {title}
               </h2>
             )}

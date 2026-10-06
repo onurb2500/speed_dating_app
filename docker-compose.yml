@@ -1,5 +1,3 @@
-version: "3.9"
-
 # Optional local infrastructure for development.
 # Postgres + Redis only — Mux requires a real account (see backend/.env.example).
 #

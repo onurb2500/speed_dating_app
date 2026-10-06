@@ -12,7 +12,7 @@ export function EncouragementBurst() {
         transition={{ duration: 1.1 }}
         className="text-7xl"
       >
-        💖
+        ✨
       </motion.div>
     </div>
   );

@@ -24,8 +24,8 @@ export default function FeedPage() {
 
   if (!ready || (isLoading && videos.length === 0)) {
     return (
-      <div className="flex h-dvh items-center justify-center">
-        <Spinner className="h-8 w-8" />
+      <div className="flex h-dvh items-center justify-center bg-videoInk-b">
+        <Spinner className="h-8 w-8 text-accent-rose" />
       </div>
     );
   }
@@ -47,10 +47,10 @@ export default function FeedPage() {
       {/* Record shortcut. */}
       <Link
         href="/record"
-        aria-label="Gravar vídeo"
-        className="absolute right-4 top-4 z-30 grid h-11 w-11 place-items-center rounded-full bg-brand-pink pt-safe"
+        aria-label="Record video"
+        className="glass absolute left-[18px] top-[110px] z-30 grid h-9 w-9 place-items-center rounded-full"
       >
-        <Video className="h-5 w-5 text-white" />
+        <Video className="h-[18px] w-[18px] text-onDarkSoft" />
       </Link>
 
       <CommentsDrawer

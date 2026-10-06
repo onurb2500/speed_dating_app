@@ -18,22 +18,22 @@ export function CommentsDrawer({ videoId, open, onClose }: CommentsDrawerProps) 
   );
 
   return (
-    <Drawer open={open} onClose={onClose} title="Comentários">
+    <Drawer open={open} onClose={onClose} title="Comments">
       <div className="flex h-full flex-col">
         <div className="flex-1 overflow-y-auto px-4">
           {comments.length === 0 && !loading && (
-            <p className="py-8 text-center text-sm text-muted">
-              Seja o primeiro a comentar 💬
+            <p className="py-8 text-center text-sm text-onDarkSoft/60">
+              Be the first to comment 💬
             </p>
           )}
           <ul className="flex flex-col gap-4 py-2">
             {comments.map((c) => (
               <li key={c.id} className="flex gap-3">
-                <div className="h-8 w-8 shrink-0 rounded-full bg-white/10" />
+                <div className="h-8 w-8 shrink-0 rounded-full bg-grad-avatar" />
                 <div>
-                  <p className="text-sm">
+                  <p className="text-sm text-onDark">
                     <span className="font-semibold">{c.user.displayName}</span>{" "}
-                    <span className="text-xs text-muted">
+                    <span className="text-xs text-onDarkSoft/55">
                       {timeAgo(c.createdAt)}
                     </span>
                   </p>
@@ -44,16 +44,16 @@ export function CommentsDrawer({ videoId, open, onClose }: CommentsDrawerProps) 
           </ul>
           {loading && (
             <div className="flex justify-center py-4">
-              <Spinner />
+              <Spinner className="text-accent-rose" />
             </div>
           )}
           {hasMore && !loading && (
             <button
               type="button"
               onClick={loadMore}
-              className="mx-auto my-3 block text-sm text-brand-cyan"
+              className="mx-auto my-3 block text-sm font-medium text-accent-rose"
             >
-              Ver mais
+              See more
             </button>
           )}
         </div>

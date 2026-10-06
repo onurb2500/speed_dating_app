@@ -4,9 +4,9 @@ export function Spinner({ className }: { className?: string }) {
   return (
     <span
       role="status"
-      aria-label="Carregando"
+      aria-label="Loading"
       className={cn(
-        "inline-block h-6 w-6 animate-spin rounded-full border-2 border-white/30 border-t-white",
+        "inline-block h-6 w-6 animate-spin rounded-full border-2 border-current border-t-transparent opacity-90",
         className,
       )}
     />

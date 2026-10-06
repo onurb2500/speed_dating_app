@@ -34,14 +34,14 @@ export function renderPromptText(prompt: Prompt): string {
   });
 }
 
-/** Relative time in PT (e.g. "há 2h"). */
+/** Relative time in English (e.g. "2h ago"). */
 export function timeAgo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
   const min = Math.floor(diff / 60000);
-  if (min < 1) return "agora";
-  if (min < 60) return `há ${min}min`;
+  if (min < 1) return "just now";
+  if (min < 60) return `${min}m ago`;
   const h = Math.floor(min / 60);
-  if (h < 24) return `há ${h}h`;
+  if (h < 24) return `${h}h ago`;
   const d = Math.floor(h / 24);
-  return `há ${d}d`;
+  return `${d}d ago`;
 }
